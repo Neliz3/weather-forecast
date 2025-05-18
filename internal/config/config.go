@@ -8,8 +8,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type Weather struct {
+	WEATHER_API_KEY string
+	WEATHER_API_URL string
+}
+
 type Config struct {
-	Port string
+	Port    string
+	Weather Weather
 }
 
 func Load() Config {
@@ -17,10 +23,13 @@ func Load() Config {
 		log.Println("No .env file found, using environment variables")
 	}
 
-	port := getEnv("PORT", ":8080")
+	PORT := getEnv("PORT", ":8080")
+	WEATHER_API_KEY := getEnv("WEATHER_API_KEY", "")
+	WEATHER_API_URL := getEnv("WEATHER_API_URL", "")
 
 	return Config{
-		Port: port,
+		Port:    PORT,
+		Weather: Weather{WEATHER_API_KEY: WEATHER_API_KEY, WEATHER_API_URL: WEATHER_API_URL},
 	}
 }
 
