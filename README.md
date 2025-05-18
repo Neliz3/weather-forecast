@@ -11,6 +11,7 @@ The Weather Forecast Service is a RESTful API application built with Go, designe
 * Render (deploy)
 * Weather API (external)
 * Mailchimp (email)
+* golangci-lint (linter)
 
 ## TDD Philosophy
 The application follows the Test-Driven Development (TDD) approach to ensure robust and reliable code.
@@ -33,7 +34,7 @@ The API provides the following endpoints as defined in [`swagger.yml`](swagger.y
 ```
 go run cmd/main.go
 ```
-4. Access the API at `http://localhost:8080.`
+4. Access the API at [`http://localhost:8080`](http://localhost:8080)
 
 ## Testing
 Run the tests using:
