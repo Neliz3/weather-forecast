@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"strings"
 
 	"weather-forecast/internal/config"
 	"weather-forecast/internal/service"
@@ -13,11 +14,11 @@ func handleGetWeather(c *gin.Context) {
 	cfg := config.Load()
 
 	var req struct {
-		City string `form:"city" binding:"required"`
+		City string `form:"q" binding:"required"`
 	}
 
 	if err := c.ShouldBindQuery(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
 
@@ -26,11 +27,24 @@ func handleGetWeather(c *gin.Context) {
 		"key": cfg.Weather.API_KEY,
 	}
 
-	weather, err := service.FetchWeatherNow(cfg.Weather.API_URL, cfg.Weather.API_KEY, queryParams)
+	weather, err := service.FetchWeatherNow(cfg.Weather.API_URL, queryParams)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		errMsg := err.Error()
+
+		switch {
+		case strings.Contains(errMsg, "400"):
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		case strings.Contains(errMsg, "404"):
+			c.JSON(http.StatusNotFound, gin.H{"error": "City not found"})
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+		}
 		return
 	}
 
-	c.JSON(http.StatusOK, weather)
+	c.JSON(http.StatusOK, gin.H{
+		"description": "Successful operation - current weather forecast returned",
+		"data":        weather,
+	},
+	)
 }

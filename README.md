@@ -30,11 +30,47 @@ The API provides the following endpoints as defined in [`swagger.yml`](swagger.y
 ## Getting Started
 1. Clone the repository.
 2. Set up the [`.env`](.env) file with your API keys and secrets (refer to [`example.env`](example.env) for structure).
-3. Run the application:
+3. Run the Docker Container
+4. Run migrations:
 ```
-go run cmd/main.go
+docker run --rm -v $(pwd):/migrations migrate/migrate \
+  -path=/migrations -database "your_database_url" up
+
+migrate -path ./migrations -database "postgres://{YOUR-USER}:{USER_PWD}@localhost:5432/{DATABASE-NAME}?sslmode=disable" up
 ```
-4. Access the API at [`http://localhost:8080`](http://localhost:8080)
+
+## Docker useful commands
+* Update files
+```
+docker-compose down
+```
+```
+docker-compose up --build
+```
+
+### DB
+* Connect to psql
+```
+docker exec -it <container_name_or_id> psql -U your_user -d your_database
+```
+
+#### Migrations
+* Up migrations
+```
+sudo docker run --rm -v $(pwd)/migrations:/migrations --network weather-forecast_default migrate/migrate   -path=/migrations   -database "postgres://{YOUR-USER}:{USER_PWD}@localhost:5432/{DATABASE-NAME}?sslmode=disable" up
+```
+
+* Clean dirty migration
+```
+sudo docker run --rm -v $(pwd)/migrations:/migrations --network weather-forecast_default migrate/migrate   -path=/migrations   -database "postgres://{YOUR-USER}:{USER_PWD}@localhost:5432/{DATABASE-NAME}?sslmode=disable" force 1
+```
+
+* If smth went wrong and it's okay to loose data (for DEV use only)
+```
+sudo docker exec -it weather-forecast-db-1 psql -U {POSTGRES_USER} -d {POSTGRES_DB} -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+```
+
+
 
 ## Testing
 Run the tests using:

@@ -27,7 +27,7 @@ type WeatherResponse struct {
 	} `json:"current"`
 }
 
-func fetchRawWeatherData(apiURL, apiKey string, queryParams map[string]string) ([]byte, error) {
+func fetchRawWeatherData(apiURL string, queryParams map[string]string) ([]byte, error) {
 	req, err := http.NewRequest(http.MethodGet, apiURL, nil)
 	if err != nil {
 		return nil, err
@@ -56,8 +56,8 @@ func fetchRawWeatherData(apiURL, apiKey string, queryParams map[string]string) (
 	return io.ReadAll(resp.Body)
 }
 
-func FetchWeatherNow(apiURL, apiKey string, queryParams map[string]string) (*map[string]any, error) {
-	data, err := fetchRawWeatherData(apiURL, apiKey, queryParams)
+func FetchWeatherNow(apiURL string, queryParams map[string]string) (*map[string]any, error) {
+	data, err := fetchRawWeatherData(apiURL, queryParams)
 	if err != nil {
 		return nil, err
 	}

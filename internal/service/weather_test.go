@@ -42,7 +42,7 @@ func TestFetchWeatherNow(t *testing.T) {
 		"key": "fake-key",
 	}
 
-	result, err := FetchWeatherNow(mockServer.URL, "fake-key", queryParams)
+	result, err := FetchWeatherNow(mockServer.URL, queryParams)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}

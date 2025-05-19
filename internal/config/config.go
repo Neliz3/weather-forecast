@@ -36,7 +36,7 @@ type Config struct {
 }
 
 func Load() *Config {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		log.Println("No .env file found, using environment variables")
 	}
 
@@ -54,7 +54,7 @@ func Load() *Config {
 	DB_PORT := getEnv("DB_PORT", "5432")
 	DB_USER := getEnv("POSTGRES_USER", "")
 	DB_PASSWORD := getEnv("POSTGRES_PASSWORD", "")
-	DB_NAME := getEnv("POSTGRES_NAME", "")
+	DB_NAME := getEnv("POSTGRES_DB", "")
 
 	return &Config{
 		Port:    PORT,

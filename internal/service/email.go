@@ -53,11 +53,11 @@ func ValidateConfirmationToken(tokenStr, secret string) (string, string, string,
 	return email, city, frequency, nil
 }
 
-func SendConfirmationEmail(fromEmail, toEmail, token, api_key, BaseURL string) error {
+func SendConfirmationEmail(fromEmail, toEmail, token, api_key, baseURL string) error {
 	from := mail.NewEmail("Weather Forecast Service", fromEmail)
 	to := mail.NewEmail("", toEmail)
 	subject := "Welcome! Please confirm your subscription"
-	url := fmt.Sprintf("%s/confirm/%s", BaseURL, token)
+	url := fmt.Sprintf("%s/confirm/%s", baseURL, token)
 
 	plain := fmt.Sprintf("Click the link to confirm: %s", url)
 	html := fmt.Sprintf("<p>Click <a href=\"%s\">here</a> to confirm your subscription.</p>", url)
