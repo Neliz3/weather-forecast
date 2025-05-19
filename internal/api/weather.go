@@ -23,10 +23,10 @@ func handleGetWeather(c *gin.Context) {
 
 	queryParams := map[string]string{
 		"q":   req.City,
-		"key": cfg.Weather.WEATHER_API_KEY,
+		"key": cfg.Weather.API_KEY,
 	}
 
-	weather, err := service.FetchWeatherNow(cfg.Weather.WEATHER_API_URL, cfg.Weather.WEATHER_API_KEY, queryParams)
+	weather, err := service.FetchWeatherNow(cfg.Weather.API_URL, cfg.Weather.API_KEY, queryParams)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

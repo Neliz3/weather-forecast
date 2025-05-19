@@ -1,6 +1,6 @@
 # Weather Forecast Service
 
-The Weather Forecast Service is a RESTful API application built with Go, designed to provide weather updates and manage email subscriptions for weather forecasts. It uses [weatreapi.com](https://www.weatherapi.com/) API for weather data and <b>Mailchimp</b> for email subscription management.
+Weather RESTful API application that allows users to subscribe to weather updates for their city via email. It uses [weatherapi.com](https://www.weatherapi.com/) API for weather data and <b>Mailchimp</b> for email subscription management.
 
 ## Tools
 * Gin
@@ -9,7 +9,7 @@ The Weather Forecast Service is a RESTful API application built with Go, designe
 * Docker
 * testing (httptest)
 * Render (deploy)
-* Weather API (external)
+* Weather API 
 * Mailchimp (email)
 * golangci-lint (linter)
 

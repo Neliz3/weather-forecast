@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -45,7 +46,12 @@ func fetchRawWeatherData(apiURL, apiKey string, queryParams map[string]string) (
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			log.Fatalf("Error closing response body: %v", err)
+		}
+	}()
 
 	return io.ReadAll(resp.Body)
 }

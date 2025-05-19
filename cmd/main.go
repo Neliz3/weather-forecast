@@ -12,7 +12,8 @@ func main() {
 	cfg := config.Load()
 
 	router := gin.Default()
-	api.RegisterRoutes(router)
+	api_group := router.Group("/api")
+	api.RegisterRoutes(api_group)
 
 	if err := router.Run(cfg.Port); err != nil {
 		log.Fatalf("Failed to run server: %v", err)
