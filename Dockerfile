@@ -15,6 +15,9 @@ WORKDIR /app
 
 COPY --from=builder /app/weatherapp .
 
+COPY internal/web/templates/ internal/web/templates/
+COPY internal/web/static/ internal/web/static/
+
 ENV PORT=8080
 
 EXPOSE 8080

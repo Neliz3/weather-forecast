@@ -1,9 +1,17 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 func RegisterRoutes(router *gin.RouterGroup) {
 	router.GET("/weather", handleGetWeather)
+
+	router.GET("/subscribe", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "subscribe.html", nil)
+	})
 	router.POST("/subscribe", handleSubscribe)
 	router.GET("/confirm/:token", handleConfirm)
 	router.GET("/unsubscribe/:token", handleUnsubscribe)

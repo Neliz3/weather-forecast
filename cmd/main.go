@@ -12,6 +12,10 @@ func main() {
 	cfg := config.Load()
 
 	router := gin.Default()
+
+	router.LoadHTMLGlob("internal/web/templates/*.html")
+	router.Static("/static", "internal/web/static")
+
 	api_group := router.Group("/api")
 	api.RegisterRoutes(api_group)
 
