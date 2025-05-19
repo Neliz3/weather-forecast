@@ -18,13 +18,13 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Start DB container
-        run: docker-compose up -d db
+        run: docker compose up -d db
 
       - name: Wait for DB to be ready
         run: sleep 10
 
       - name: Run DB migrations
-        run: docker-compose run --rm migrate
+        run: docker compose run --rm migrate
 
 
   build-app:
@@ -39,4 +39,4 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build App Container
-        run: docker-compose build app
+        run: docker compose build app

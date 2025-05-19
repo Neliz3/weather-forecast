@@ -10,8 +10,9 @@ Weather RESTful API application that allows users to subscribe to weather update
 * testing (httptest)
 * Render (deploy)
 * Weather API 
-* Mailchimp (email)
+* SendGrid (email)
 * golangci-lint (linter)
+* JWT
 
 ## TDD Philosophy
 The application follows the Test-Driven Development (TDD) approach to ensure robust and reliable code.
@@ -32,16 +33,16 @@ The API provides the following endpoints as defined in [`swagger.yml`](swagger.y
 2. Set up the [`.env`](.env) file with your API keys and secrets (refer to [`example.env`](example.env) for structure).
 3. Build and start the services with Docker Compose
 ```
-docker-compose up --build
+docker compose up --build
 ```
 4. To run migrations, use
 ```
-docker-compose up -d db
-docker-compose run --rm migrate
-docker-compose build app
+docker compose up -d db
+docker compose run --rm migrate
+docker compose build app
 ```
 
 ## Future Updates
-* endpoints testing
-* add achive emails logic (not delete permanently)
-* decode key query parameter in /weather endpoint with JWT token for secure
+* Endpoint's testing and mock servers
+* Add achive emails logic (don't delete permanently)
+* Decode key query parameter in /weather endpoint with JWT token

@@ -70,7 +70,7 @@ func SendConfirmationEmail(fromEmail, toEmail, token, api_key, baseURL string) e
 func SendWeatherUpdateEmail(fromEmail, toEmail, city, frequency string, weather map[string]any, cfg *config.Config) error {
 	from := mail.NewEmail("Weather Forecast Service", fromEmail)
 	to := mail.NewEmail("", toEmail)
-	subject := "Your Weather Update"
+	subject := "Your Weather Update in " + city
 
 	// Retrieve unsubscribed token
 	token, err := GenerateConfirmationToken(toEmail, city, frequency, cfg.Email.SECRET_KEY_JWT)
@@ -82,7 +82,7 @@ func SendWeatherUpdateEmail(fromEmail, toEmail, city, frequency string, weather 
 	humidity := weather["humidity"]
 	description := weather["description"]
 
-	unsubscribeURL := fmt.Sprintf("%s/api/unsubscribe/%s", cfg.BaseURL, token)
+	unsubscribeURL := fmt.Sprintf("%s/unsubscribe/%s", cfg.BaseURL, token)
 
 	plainTextContent := fmt.Sprintf(
 		"Weather update:\nTemperature: %v\nHumidity: %v\nDescription: %v\n\nTo unsubscribe, click: %s",
