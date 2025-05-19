@@ -1,11 +1,7 @@
 package config
 
 import (
-	"log"
 	"os"
-	"strconv"
-
-	"github.com/joho/godotenv"
 )
 
 type Weather struct {
@@ -36,25 +32,21 @@ type Config struct {
 }
 
 func Load() *Config {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Println("No .env file found, using environment variables")
-	}
+	PORT := os.Getenv("PORT")
+	BaseURL := os.Getenv("BASE_URL")
 
-	PORT := getEnv("PORT", ":8080")
-	BaseURL := getEnv("BASE_URL", "http://localhost:8080/api")
+	WEATHER_API_KEY := os.Getenv("WEATHER_API_KEY")
+	WEATHER_API_URL := os.Getenv("WEATHER_API_URL")
 
-	WEATHER_API_KEY := getEnv("WEATHER_API_KEY", "")
-	WEATHER_API_URL := getEnv("WEATHER_API_URL", "")
+	EMAIL_FROM := os.Getenv("EMAIL_FROM")
+	EMAIL_API_KEY := os.Getenv("EMAIL_API_KEY")
+	SECRET_KEY_JWT := os.Getenv("SECRET_KEY_JWT")
 
-	EMAIL_FROM := getEnv("EMAIL_FROM", "")
-	EMAIL_API_KEY := getEnv("EMAIL_API_KEY", "")
-	SECRET_KEY_JWT := getEnv("SECRET_KEY_JWT", "")
-
-	DB_HOST := getEnv("DB_HOST", "localhost")
-	DB_PORT := getEnv("DB_PORT", "5432")
-	DB_USER := getEnv("POSTGRES_USER", "")
-	DB_PASSWORD := getEnv("POSTGRES_PASSWORD", "")
-	DB_NAME := getEnv("POSTGRES_DB", "")
+	DB_HOST := os.Getenv("DB_HOST")
+	DB_PORT := os.Getenv("DB_PORT")
+	DB_USER := os.Getenv("POSTGRES_USER")
+	DB_PASSWORD := os.Getenv("POSTGRES_PASSWORD")
+	DB_NAME := os.Getenv("POSTGRES_DB")
 
 	return &Config{
 		Port:    PORT,
@@ -75,22 +67,4 @@ func Load() *Config {
 			DBName:   DB_NAME,
 		},
 	}
-}
-
-func getEnv[T any](key string, defaultVal T) T {
-	valStr, exists := os.LookupEnv(key)
-	if !exists {
-		return defaultVal
-	}
-
-	switch any(defaultVal).(type) {
-	case int:
-		if val, err := strconv.Atoi(valStr); err == nil {
-			return any(val).(T)
-		}
-	case string:
-		return any(valStr).(T)
-	}
-
-	return defaultVal
 }
