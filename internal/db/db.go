@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"weather-forecast/internal/config"
 	"weather-forecast/internal/model"
 
@@ -54,4 +55,27 @@ func DeleteSubscription(db *sql.DB, email string) error {
 	query := `DELETE FROM subscriptions WHERE email=$1`
 	_, err := db.Exec(query, email)
 	return err
+}
+
+func GetConfirmedSubscriptionsByFrequency(db *sql.DB, frequency string) ([]model.Subscription, error) {
+	query := `SELECT email, city, frequency, confirmed FROM subscriptions WHERE confirmed=true AND frequency=$1`
+	rows, err := db.Query(query, frequency)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Printf("Failed to close DB connection: %v", err)
+		}
+	}()
+
+	var subs []model.Subscription
+	for rows.Next() {
+		var s model.Subscription
+		if err := rows.Scan(&s.Email, &s.City, &s.Frequency, &s.Confirmed); err != nil {
+			return nil, err
+		}
+		subs = append(subs, s)
+	}
+	return subs, nil
 }

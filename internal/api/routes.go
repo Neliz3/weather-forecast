@@ -7,7 +7,7 @@ import (
 )
 
 func RegisterRoutes(router *gin.RouterGroup) {
-	router.GET("/weather", handleGetWeather)
+	router.GET("/weather", HandleGetWeather)
 
 	router.GET("/subscribe", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "subscribe.html", nil)

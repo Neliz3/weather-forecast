@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func handleGetWeather(c *gin.Context) {
+func HandleGetWeather(c *gin.Context) {
 	cfg := config.Load()
 
 	var req struct {

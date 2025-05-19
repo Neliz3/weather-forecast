@@ -1,22 +1,14 @@
 package service
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"fmt"
-	"strings"
 	"time"
+	"weather-forecast/internal/config"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
-
-func GetSubscriberHash(email string) string {
-	// Used to create a unique hash for the email address
-	hash := md5.Sum([]byte(strings.ToLower(email)))
-	return hex.EncodeToString(hash[:])
-}
 
 func GenerateConfirmationToken(email, city, frequency, secret string) (string, error) {
 	claims := jwt.MapClaims{
@@ -72,5 +64,50 @@ func SendConfirmationEmail(fromEmail, toEmail, token, api_key, baseURL string) e
 		return fmt.Errorf("SendGrid error: %s", resp.Body)
 	}
 	fmt.Printf("Email sent. Status: %d\nBody: %s\n", resp.StatusCode, resp.Body)
+	return nil
+}
+
+func SendWeatherUpdateEmail(fromEmail, toEmail, city, frequency string, weather map[string]any, cfg *config.Config) error {
+	from := mail.NewEmail("Weather Forecast Service", fromEmail)
+	to := mail.NewEmail("", toEmail)
+	subject := "Your Weather Update"
+
+	// Retrieve unsubscribed token
+	token, err := GenerateConfirmationToken(toEmail, city, frequency, cfg.Email.SECRET_KEY_JWT)
+	if err != nil {
+		return fmt.Errorf("token generation failed: %s", err)
+	}
+
+	temperature := weather["temperature"]
+	humidity := weather["humidity"]
+	description := weather["description"]
+
+	unsubscribeURL := fmt.Sprintf("%s/api/unsubscribe/%s", cfg.BaseURL, token)
+
+	plainTextContent := fmt.Sprintf(
+		"Weather update:\nTemperature: %v\nHumidity: %v\nDescription: %v\n\nTo unsubscribe, click: %s",
+		temperature, humidity, description, unsubscribeURL,
+	)
+	htmlContent := fmt.Sprintf(
+		`<p>Weather update:</p>
+		<ul>
+			<li>Temperature: %v</li>
+			<li>Humidity: %v</li>
+			<li>Description: %v</li>
+		</ul>
+		<p><a href="%s" style="color: red;">Unsubscribe from these emails</a></p>`,
+		temperature, humidity, description, unsubscribeURL,
+	)
+
+	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
+	client := sendgrid.NewSendClient(cfg.Email.API_KEY)
+	resp, err := client.Send(message)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode >= 400 {
+		return fmt.Errorf("SendGrid error: %s", resp.Body)
+	}
+
 	return nil
 }

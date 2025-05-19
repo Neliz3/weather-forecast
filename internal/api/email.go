@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +26,11 @@ func handleSubscribe(c *gin.Context) {
 	var req SubscribeRequest
 	cfg := config.Load()
 	db_connect, _ := db.Connect()
-	defer db_connect.Close()
+	defer func() {
+		if err := db_connect.Close(); err != nil {
+			log.Printf("Failed to close DB connection: %v", err)
+		}
+	}()
 
 	if err := c.ShouldBind(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -75,7 +80,11 @@ func handleConfirm(c *gin.Context) {
 
 	cfg := config.Load()
 	db_connect, _ := db.Connect()
-	defer db_connect.Close()
+	defer func() {
+		if err := db_connect.Close(); err != nil {
+			log.Printf("Failed to close DB connection: %v", err)
+		}
+	}()
 
 	email, _, _, err := service.ValidateConfirmationToken(token, cfg.Email.SECRET_KEY_JWT)
 	if err != nil {
@@ -104,7 +113,11 @@ func handleUnsubscribe(c *gin.Context) {
 
 	cfg := config.Load()
 	db_connect, _ := db.Connect()
-	defer db_connect.Close()
+	defer func() {
+		if err := db_connect.Close(); err != nil {
+			log.Printf("Failed to close DB connection: %v", err)
+		}
+	}()
 
 	email, _, _, err := service.ValidateConfirmationToken(token, cfg.Email.SECRET_KEY_JWT)
 	if err != nil {
