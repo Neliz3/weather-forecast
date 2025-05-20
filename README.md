@@ -2,6 +2,8 @@
 
 Weather RESTful API application that allows users to subscribe to weather updates for their city via email. It uses [weatherapi.com](https://www.weatherapi.com/) API for weather data and <b>Mailchimp</b> for email subscription management.
 
+Website for subscribe: https://weather-forecast-jnf5.onrender.com/api/subscribe
+
 ## Tools
 * Gin
 * PostgreSQL
@@ -24,6 +26,7 @@ The API provides the following endpoints as defined in [`swagger.yml`](swagger.y
 - **GET /weather**: Fetch the current weather for a specified city.
 
 ### Subscription
+- **GET /subscribe**: Get a subscription form.
 - **POST /subscribe**: Subscribe an email to receive weather updates for a specific city.
 - **GET /confirm/{token}**: Confirm an email subscription using a token.
 - **GET /unsubscribe/{token}**: Unsubscribe from weather updates using a token.

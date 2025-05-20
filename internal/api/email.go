@@ -52,7 +52,7 @@ func handleSubscribe(c *gin.Context) {
 		Confirmed: false,
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save subscription"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save subscription: " + err.Error()})
 		return
 	}
 
